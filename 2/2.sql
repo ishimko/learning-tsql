@@ -68,7 +68,7 @@ CREATE TABLE [dbo].[PersonPhone](
 
 ALTER TABLE [dbo].[PersonPhone] ADD ID BIGINT IDENTITY(2, 2) UNIQUE;
 
-ALTER TABLE [dbo].[PersonPhone] ADD CONSTRAINT phone_only_numbers CHECK ([PhoneNumber] LIKE '%[^A-Z]%')
+ALTER TABLE [dbo].[PersonPhone] ADD CONSTRAINT phone_only_numbers CHECK ([PhoneNumber] NOT LIKE '%[a-zA-Z]%')
 
 ALTER TABLE [dbo].[PersonPhone] ADD CONSTRAINT default_type_id DEFAULT 1 FOR [PhoneNumberTypeID];
 
@@ -91,3 +91,45 @@ WHERE [ph].[PhoneNumber] NOT LIKE '%[()]%'
 	  AND [e].[HireDate] = [edh].[StartDate];
 
 ALTER TABLE [dbo].[PersonPhone] ALTER COLUMN [PhoneNumber] [dbo].[Phone] NULL;
+
+
+-- 3
+
+
+DROP TABLE [dbo].[Address];
+
+CREATE TABLE [dbo].[Address](
+	[AddressID] [int],
+	[AddressLine1] [nvarchar](60) NOT NULL,
+	[AddressLine2] [nvarchar](60) NULL,
+	[City] [nvarchar](30) NOT NULL,
+	[StateProvinceID] [int] NOT NULL,
+	[PostalCode] [nvarchar](15) NOT NULL,
+	[ModifiedDate] [datetime] NOT NULL)
+
+ALTER TABLE [dbo].[Address] ADD PRIMARY KEY ([StateProvinceID], [PostalCode]);
+
+ALTER TABLE [dbo].[Address] ADD CONSTRAINT postal_only_numbers CHECK ([PostalCode] LIKE '%[0-9]%')
+
+ALTER TABLE [dbo].[Address] ADD CONSTRAINT default_modified_date DEFAULT GETDATE() FOR [ModifiedDate];
+
+INSERT INTO [dbo].[Address]
+           ([AddressID]
+           ,[AddressLine1]
+           ,[AddressLine2]
+           ,[City]
+           ,[StateProvinceID]
+           ,[PostalCode]
+           ,[ModifiedDate])
+SELECT MAX([a].[AddressID]) OVER (PARTITION BY [a].[StateProvinceID], [a].[PostalCode]) AS [AddressID]
+      ,[AddressLine1]
+      ,[AddressLine2]
+      ,[City]
+      ,[a].[StateProvinceID]
+      ,[PostalCode]      
+      ,[a].[ModifiedDate]
+FROM [Person].[Address] as [a]
+JOIN [Person].[StateProvince] as [sp] ON [sp].[StateProvinceID] = [a].[StateProvinceID]
+WHERE [sp].[CountryRegionCode] = 'US'
+	  AND [a].[PostalCode] LIKE '%[0-9]%'
+
