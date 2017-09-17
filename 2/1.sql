@@ -264,18 +264,20 @@ GROUP BY [d].[DepartmentID],
 HAVING COUNT([edh].[BusinessEntityID]) > 10
 
 
-
--- TODO
 SELECT [d].[Name],
-	   [e].[HireDate],
-	   SUM([e].[SickLeaveHours]) OVER (PARTITION BY COUNT([e].[BusinessEntityID]) OVER(PARTITION BY [d].[DepartmentID]))
-FROM [HumanResources].[Employee] AS [e]
-JOIN [HumanResources].[EmployeeDepartmentHistory] AS [edh] ON [edh].[BusinessEntityID] = [e].[BusinessEntityID]
-JOIN [HumanResources].[Department] AS [d] ON [d].[DepartmentID] = [edh].[DepartmentID]
+  [e].[HireDate],
+  [e].[SickLeaveHours],
+  SUM([e].[SickLeaveHours]) OVER (PARTITION BY [d].[DepartmentID] ORDER BY [e].[HireDate]) AS AccumulativeSum
+FROM [HumanResources].[Department] AS [d]
+  JOIN [HumanResources].[EmployeeDepartmentHistory] AS [edh] ON [edh].[DepartmentID] = [d].[DepartmentID]
+  JOIN [HumanResources].[Employee] AS [e] ON [e].[BusinessEntityID] = [edh].[BusinessEntityID]
 GROUP BY
-	[d].[Name],
-	[e].[HireDate],
-	[e].[SickLeaveHours]
+  [d].[Name],
+  [e].[HireDate],
+  [e].[SickLeaveHours],
+  [e].[BusinessEntityID],
+  [d].[DepartmentID]
+ORDER BY [d].[Name], [e].[HireDate];
 
 
 -- 9
