@@ -13,14 +13,13 @@ GO
 
 -- b
 CREATE TABLE [dbo].[#PersonPhone](
-	[BusinessEntityID] [int] NOT NULL,
+	[BusinessEntityID] [int] NOT NULL PRIMARY KEY,
 	[PhoneNumber] NVARCHAR(50) NOT NULL,
 	[PhoneNumberTypeID] [int] NOT NULL,
 	[ModifiedDate] [datetime] NOT NULL,
 	[JobTitle] NVARCHAR(50),
 	[BirthDate] DATE,
-	[HireDate] DATE,
-	PRIMARY KEY([BusinessEntityID]))
+	[HireDate] DATE);
 GO
 
 
