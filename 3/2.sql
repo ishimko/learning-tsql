@@ -45,6 +45,8 @@ INSERT INTO [dbo].[#PersonPhone](
 		   ,[HireDate])
 SELECT * FROM PERSON_PHONES;
 
+SELECT * FROM [dbo].[#PersonPhone];
+
 
 -- d
 DELETE FROM [dbo].[PersonPhone]
@@ -56,9 +58,9 @@ MERGE INTO [dbo].[PersonPhone] AS target
 USING [dbo].[#PersonPhone] AS source
 ON target.[BusinessEntityID] = source.[BusinessEntityID]
 WHEN MATCHED THEN UPDATE SET
-    [JobTitle] = Target.[JobTitle],
-	[BirthDate] = Target.[BirthDate],
-	[HireDate] = Target.[HireDate]    
+    target.[JobTitle] = source.[JobTitle],
+	target.[BirthDate] = source.[BirthDate],
+	target.[HireDate] = source.[HireDate]    
 WHEN NOT MATCHED BY TARGET THEN
     INSERT (
 			[BusinessEntityID]
@@ -80,3 +82,7 @@ WHEN NOT MATCHED BY TARGET THEN
 WHEN NOT MATCHED BY SOURCE THEN
     DELETE;
 GO
+
+SELECT * FROM [dbo].[#PersonPhone];
+
+SELECT * FROM [dbo].[PersonPhone];
