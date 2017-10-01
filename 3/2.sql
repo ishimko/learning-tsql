@@ -1,7 +1,9 @@
 USE [AdventureWorks2012];
 GO
 
-DROP TABLE [dbo].[#PersonPhone];
+IF OBJECT_ID('[tempdb].[dbo].[#PersonPhone]') IS NOT NULL
+	DROP TABLE [dbo].[#PersonPhone];
+GO
 
 -- a
 ALTER TABLE [dbo].[PersonPhone] ADD 
