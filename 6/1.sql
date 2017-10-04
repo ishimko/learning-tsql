@@ -18,8 +18,6 @@ AS
 		MAX([t].Weight)
 		FOR [t].[Color] IN (' + @productColor + ')
 	) [p]'
-
-  PRINT @sql
   EXEC sp_executesql @sql
 GO
 
