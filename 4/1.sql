@@ -13,8 +13,6 @@ IF OBJECT_ID('[Production].[View_Location]') IS NOT NULL
   DROP VIEW [Production].[View_Location];
 GO
 
-DELETE FROM [Production].[Location]
-WHERE [Name] = 'Test Location';
 
 -- a
 CREATE TABLE [Production].[LocationHost] (
