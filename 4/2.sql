@@ -50,6 +50,7 @@ CREATE VIEW [Production].[View_LocationProduct] (
     JOIN [Production].[Product] AS [p] ON [p].[ProductID] = [pi].[ProductID];
 GO
 
+
 CREATE UNIQUE CLUSTERED INDEX [AK_View_LocationProduct_LocationID_ProductID]
   ON [Production].[View_LocationProduct] ([LocationID], [ProductID]);
 GO
@@ -150,10 +151,19 @@ VALUES ('Final Assembly1', 15.2500, 121.00, '2005-06-01 00:00:00.000',
 
 DECLARE @LocationID [SMALLINT] = (SELECT MAX([LocationID]) FROM [Production].[Location]);
 
+SELECT * FROM [Production].[Location] WHERE LocationID = @LocationID;
+SELECT * FROM [Production].[ProductInventory] WHERE LocationID = @LocationID;
+
 UPDATE [Production].[View_LocationProduct]
 SET
   [Name] = 'Final Assembly2'
 WHERE [LocationID] = @LocationID;
 
+SELECT * FROM [Production].[Location] WHERE LocationID = @LocationID;
+SELECT * FROM [Production].[ProductInventory] WHERE LocationID = @LocationID;
+
 DELETE FROM [Production].[View_LocationProduct]
 WHERE [LocationID] = @LocationID;
+
+SELECT * FROM [Production].[Location] WHERE LocationID = @LocationID;
+SELECT * FROM [Production].[ProductInventory] WHERE LocationID = @LocationID;
